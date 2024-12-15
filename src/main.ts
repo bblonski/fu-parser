@@ -57,7 +57,17 @@ Hooks.on("renderSettings", async (_app, $html) => {
 		importPDFButton.append("Import PDF");
 		importPDFButton.addEventListener("click", () => {
 			const application = new ImportPDFApplication(
-				{ pdfPath: "", imagePath: "", parseResults: [], inProgress: false },
+				{
+					pdfName: "Core Rulebook",
+					pdfNames: {
+						"Core Rulebook": "Core Rulebook",
+						"Core Rulebook 1.02": "Core Rulebook 1.02",
+					},
+					pdfPath: "",
+					imagePath: "",
+					parseResults: [],
+					inProgress: false,
+				},
 				{
 					width: 450,
 					height: 600,

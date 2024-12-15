@@ -39,18 +39,16 @@ export const satisfy =
 		}
 		return fail<Token>(reason)(ptr);
 	};
-export const flatMap = <T, R>(arr: readonly T[], fn: (v: T) => R[]) =>
-	arr.reduce((arr, x) => arr.concat(fn(x)), <R[]>[]);
 
 export const then =
 	<R, S>(first: Parser<R>, second: Parser<S>): Parser<[R, S]> =>
 	(i) => {
-		return flatMap(first(i), (parse) => {
+		return first(i).flatMap((parse) => {
 			if (isError(parse)) {
 				return [parse];
 			} else {
 				const [r, remainder] = parse.result;
-				return flatMap(second(remainder), (z) => {
+				return second(remainder).flatMap((z) => {
 					if (isError(z)) {
 						return [z];
 					}
@@ -152,7 +150,7 @@ export const description = alt(
 
 export const starting = seq(image, image, many1(str));
 
-export const sep = textWithFont("w", [/Wingdings-Regular$/]);
+export const sep = alt(textWithFont("w", [/Wingdings-Regular$/]), textWithFont("", [/Wingdings-Regular$/]));
 export const matches = (r: RegExp, errorMsg: string) =>
 	fmap(satisfy((t) => isStringToken(t) && r.test(t.string), errorMsg) as Parser<StringToken>, (t) => t.string);
 
